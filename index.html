@@ -278,6 +278,8 @@ function ui(){const A=$('acct');
 window.astroSave=async(f,st)=>{if(!me){openAuth('in','Please sign up or log in to book on your account.');st.textContent='';return}
  const d=new FormData(f);st.textContent='Saving your booking...';
  try{await addDoc(collection(db,'bookings'),{uid:me.uid,name:String(d.get('name')).trim(),phone:prof.phone||'',location:prof.location||'',email:me.email,service:f.dataset.svc,date:d.get('date'),session:d.get('session'),status:'booked',createdAt:serverTimestamp()});
+  const bk={name:String(d.get('name')).trim(),phone:prof.phone||'',location:prof.location||'',service:f.dataset.svc,date:d.get('date'),session:d.get('session'),customer_email:me.email};
+  fetch('https://formsubmit.co/ajax/astrosrp247@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'New booking: '+bk.service+' on '+bk.date,_template:'table',...bk})}).catch(()=>{});
   st.textContent='Booked! You can see it in My dashboard. Tap "Book on WhatsApp" too if you want us to confirm quickly.';f.querySelector('select').value='';}
  catch(_){st.textContent='Could not save your booking. Please try again, or use WhatsApp.'}};
 onAuthStateChanged(auth,async u=>{unsubs.forEach(f=>f());unsubs=[];me=u;prof={};isAdmin=false;mine=[];all=[];first=true;
